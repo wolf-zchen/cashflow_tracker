@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# User data — NEVER share
+data/*.db
+data/*.db-journal
+data/transactions.db
+data/transactions.db-journal
+data/category_mappings.json
+data/learned_rules.json
+data/learned_rules_backup.json
+data/raw/
+data/processed/
+
+# Logs & exports (user-specific)
+logs/
+exports/
+
+# Generated charts (snapshots of user data)
+charts/
+
+# Build artifacts
+*.spec.bak
+CashflowTracker.app/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Local config
+.env
+.env.local
