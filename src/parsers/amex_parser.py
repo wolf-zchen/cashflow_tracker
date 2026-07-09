@@ -81,6 +81,9 @@ class AmexParser(BaseParser):
             category = row.get('Category', 'Uncategorized')
             if pd.isna(category):
                 category = 'Uncategorized'
+            # Amex categories come as "Parent-Child" (e.g. "Travel-Lodging").
+            # Keep only the top-level parent to avoid over-granular categories.
+            category = str(category).split('-')[0].strip()
             
             # Create transaction
             transaction = Transaction(

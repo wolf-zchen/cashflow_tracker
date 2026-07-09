@@ -10,6 +10,7 @@ from .chase_credit_parser import ChaseCreditParser
 from .chase_checking_parser import ChaseCheckingParser
 from .amex_csv_parser import AmexCsvParser
 from .amex_parser import AmexParser
+from .amex_activity_parser import AmexActivityParser
 from .bofa_parser import BofAParser
 from .capital_one_parser import CapitalOneParser
 
@@ -23,6 +24,7 @@ ALL_PARSERS = [
     ChaseCheckingParser(),
     AmexCsvParser(),
     AmexParser(),         # Excel format (must follow CSV Amex check)
+    AmexActivityParser(), # "Transaction Details" Excel export (no Card Member/Account # columns)
     BofAParser(),
     CapitalOneParser(),
 ]
@@ -71,6 +73,7 @@ __all__ = [
     'ChaseCheckingParser',
     'AmexCsvParser',
     'AmexParser',
+    'AmexActivityParser',
     'BofAParser',
     'CapitalOneParser',
     'detect_parser',

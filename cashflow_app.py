@@ -1721,6 +1721,7 @@ class CashflowApp:
             UPDATE transactions
             SET transaction_type = 'expense'
             WHERE (description LIKE '%ATM%' OR description LIKE '%WITHDRAWAL%')
+              AND description NOT LIKE '%PAYMENT%'
               AND transaction_type = 'transfer'
         """)
         count = cursor.rowcount
@@ -2440,6 +2441,7 @@ class CashflowApp:
             SELECT id, date, description, amount, category, transaction_type
             FROM transactions
             WHERE (description LIKE '%ATM%' OR description LIKE '%WITHDRAWAL%')
+              AND description NOT LIKE '%PAYMENT%'
               AND transaction_type = 'transfer'
             ORDER BY date DESC
         """)
@@ -2471,6 +2473,7 @@ class CashflowApp:
                 UPDATE transactions
                 SET transaction_type = 'expense'
                 WHERE (description LIKE '%ATM%' OR description LIKE '%WITHDRAWAL%')
+                  AND description NOT LIKE '%PAYMENT%'
                   AND transaction_type = 'transfer'
             """)
 
@@ -3589,7 +3592,7 @@ class AddTransactionDialog:
         amount_frame.grid(row=row, column=1, sticky='w', pady=5)
 
         ttk.Entry(amount_frame, textvariable=self.amount_var, width=15).pack(side='left')
-        ttk.Label(amount_frame, text="(negative for expenses)", font=('Arial', 8)).pack(side='left', padx=5)
+        ttk.Label(amount_frame, text="(enter positive; sign is set by Type below)", font=('Arial', 8)).pack(side='left', padx=5)
         row += 1
 
         # Category
@@ -3711,6 +3714,14 @@ class AddTransactionDialog:
         txn_type = self.type_var.get()
         tags = self.tags_var.get().strip()
         notes = self.notes_text.get('1.0', 'end').strip()
+
+        # Auto-correct sign based on selected Type, regardless of how the user
+        # typed the amount (expenses negative, income positive). Transfers are
+        # left as-entered since direction varies.
+        if txn_type == 'expense':
+            amount = -abs(amount)
+        elif txn_type == 'income':
+            amount = abs(amount)
 
         # Insert into database
         conn = self.db.get_connection()
