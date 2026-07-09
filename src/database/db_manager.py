@@ -147,19 +147,20 @@ class DatabaseManager:
         
         conn.commit()
     
-    def add_transactions(self, transactions: List[dict]) -> int:
-        """Add multiple transactions, return count of new transactions added"""
+    def add_transactions(self, transactions: List[dict]) -> tuple:
+        """Add multiple transactions, return (added_count, duplicate_count)"""
         conn = self.get_connection()
         cursor = conn.cursor()
-        
+
         added_count = 0
+        duplicate_count = 0
         for txn in transactions:
             # Check for duplicates (same date, amount, description, account)
             cursor.execute("""
-                SELECT id FROM transactions 
+                SELECT id FROM transactions
                 WHERE date = ? AND amount = ? AND description = ? AND account_name = ?
             """, (txn['date'], txn['amount'], txn['description'], txn['account_name']))
-            
+
             if cursor.fetchone() is None:
                 # Not a duplicate, insert it
                 cursor.execute("""
@@ -176,9 +177,11 @@ class DatabaseManager:
                     txn.get('notes')
                 ))
                 added_count += 1
-        
+            else:
+                duplicate_count += 1
+
         conn.commit()
-        return added_count
+        return added_count, duplicate_count
     
     def log_import(self, file_name: str, account_name: str, institution: str, count: int):
         """Log an import operation"""

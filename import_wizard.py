@@ -132,7 +132,7 @@ def import_file(file_path: Path, db: DatabaseManager):
         
         # Add to database
         print(f"💾 Importing to database...")
-        added_count = db.add_transactions(transaction_dicts)
+        added_count, duplicate_count = db.add_transactions(transaction_dicts)
         
         # Log the import
         db.log_import(
